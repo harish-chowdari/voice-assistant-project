@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import axios from '../../axios';
-import { Link, useNavigate } from 'react-router-dom';
-import styles from './Login.module.css'; // Import the CSS module
+import React, { useState } from "react";
+import axios from "../../axios";
+import { Link, useNavigate } from "react-router-dom";
+import styles from "./Login.module.css"; // Import the CSS module
 
 const Login = () => {
-  const [login, setLogin] = useState({ email: '', password: '' });
-  const [errorMessage, setErrorMessage] = useState(''); // State for error messages
+  const [login, setLogin] = useState({ email: "", password: "" });
+  const [errorMessage, setErrorMessage] = useState(""); // State for error messages
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -14,10 +14,10 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(''); // Clear previous error messages
+    setErrorMessage(""); // Clear previous error messages
 
     try {
-      const res = await axios.post('/login', { ...login });
+      const res = await axios.post("/login", { ...login });
 
       if (res.data.EnterAllDetails) {
         setErrorMessage(res.data.EnterAllDetails);
@@ -28,18 +28,16 @@ const Login = () => {
       } else {
         const userId = res.data._id; // Extract the user ID from response
         navigate(`/schedule/${userId}`);
-        
       }
     } catch (error) {
       console.log(error);
-      setErrorMessage('An error occurred. Please try again.');
+      setErrorMessage("An error occurred. Please try again.");
     }
   };
 
   return (
     <form className={styles.container} onSubmit={handleSubmit}>
       <div className={styles.formContainer}>
-
         <h2>Login</h2>
         {errorMessage && <p className={styles.error}>{errorMessage}</p>}
 
@@ -59,15 +57,23 @@ const Login = () => {
           value={login.password}
           className={styles.input}
         />
-        <p className={styles.resetPassword}>Forget password? update <Link to="/reset"> here</Link></p>
+        <p className={styles.resetPassword}>
+          Forget password? update{" "}
+          <Link to="/reset" className={styles.link}>
+            {" "}
+            here
+          </Link>
+        </p>
         <button type="submit" className={styles.button}>
           Submit
         </button>
 
         <p className={styles.text}>
-          Don't have an account? <Link to="/signup" className={styles.link}>Signup</Link>
+          Don't have an account?{" "}
+          <Link to="/signup" className={styles.link}>
+            Signup
+          </Link>
         </p>
-        
       </div>
     </form>
   );

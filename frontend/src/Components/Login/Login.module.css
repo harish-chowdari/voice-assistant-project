@@ -74,6 +74,10 @@
   margin: 0px;
 }
 
+.link{
+  text-decoration: none;
+}
+
 .error {
   color: red;
   font-size: 14px;

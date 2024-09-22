@@ -49,6 +49,12 @@ const PasswordReset = () => {
           required
         />
 
+        
+
+        <button type="submit" className={styles.button}>
+          Send Reset Link
+        </button>
+
         <p className={styles.passwordText}>
           Remember your password?{" "}
           <Link to="/" className={styles.link}>
@@ -56,16 +62,7 @@ const PasswordReset = () => {
           </Link>
         </p>
 
-        <button type="submit" className={styles.button}>
-          Send Reset Link
-        </button>
-
-        <p className={styles.text}>
-          Don't have an account?{" "}
-          <Link to="/signup" className={styles.link}>
-            Signup
-          </Link>
-        </p>
+        
       </div>
     </form>
   );
