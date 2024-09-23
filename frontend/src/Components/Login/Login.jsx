@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import axios from "../../axios";
 import { Link, useNavigate } from "react-router-dom";
-import styles from "./Login.module.css"; // Import the CSS module
+import styles from "./Login.module.css"; 
 
 const Login = () => {
   const [login, setLogin] = useState({ email: "", password: "" });
-  const [errorMessage, setErrorMessage] = useState(""); // State for error messages
+  const [errorMessage, setErrorMessage] = useState(""); 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -14,7 +14,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(""); // Clear previous error messages
+    setErrorMessage(""); 
 
     try {
       const res = await axios.post("/login", { ...login });
@@ -26,8 +26,8 @@ const Login = () => {
       } else if (res.data.Incorrect) {
         setErrorMessage(res.data.Incorrect);
       } else {
-        const userId = res.data._id; // Extract the user ID from response
-        navigate(`/schedule/${userId}`);
+        const userId = res.data._id; 
+        navigate(`/home/${userId}`);
       }
     } catch (error) {
       console.log(error);

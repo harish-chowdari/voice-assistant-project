@@ -4,8 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "./PasswordReset.module.css";
 
 const PasswordReset = () => {
-  const [login, setLogin] = useState({ email: "" });
+  const [login, setLogin] = useState({ email: "", otp: "", newPassword: "" });
   const [errorMessage, setErrorMessage] = useState("");
+  const [isOTPSent, setIsOTPSent] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -16,20 +17,42 @@ const PasswordReset = () => {
     e.preventDefault();
     setErrorMessage("");
 
-    try {
-      const res = await axios.post("/password-reset", { ...login });
+    if (!isOTPSent) {
+      try {
+        const res = await axios.post("/send-otp", { email: login.email });
 
-      if (res.data.EnterAllDetails) {
-        setErrorMessage(res.data.EnterAllDetails);
-      } else if (res.data.NotExist) {
-        setErrorMessage(res.data.NotExist);
-      } else if (res.data.Success) {
-        alert("A password reset link has been sent to your email.");
-        navigate("/login"); // Redirect to login after sending the reset link
+        if (res.data.emailRequire) {
+          setErrorMessage("Please enter your email address.");
+        } else if (res.data.userNotExist) {
+          setErrorMessage("No account found with this email address.");
+        } else if (res.data.msg === "OTP sent successfully") {
+          alert("OTP has been sent to your email. Please check your inbox.");
+          setIsOTPSent(true);
+        }
+      } catch (error) {
+        console.log(error);
+        setErrorMessage("An error occurred. Please try again.");
       }
-    } catch (error) {
-      console.log(error);
-      setErrorMessage("An error occurred. Please try again.");
+    } else {
+      try {
+        const res = await axios.post("/update-password", {
+          email: login.email,
+          otp: login.otp,
+          newPassword: login.newPassword,
+        });
+
+        if (res.data.otpNotValid) {
+          setErrorMessage("Invalid OTP. Please try again.");
+        } else if (res.data.otpExpired) {
+          setErrorMessage("OTP has expired. Please request a new one.");
+        } else if (res.data.updatedPassword) {
+          alert("Password updated successfully! You can now log in.");
+          navigate("/");
+        }
+      } catch (error) {
+        console.log(error);
+        setErrorMessage("An error occurred while updating the password.");
+      }
     }
   };
 
@@ -49,10 +72,32 @@ const PasswordReset = () => {
           required
         />
 
-        
+        {isOTPSent && (
+          <>
+            <input
+              placeholder="Enter OTP"
+              type="text"
+              name="otp"
+              onChange={handleChange}
+              value={login.otp}
+              className={styles.input}
+              required
+            />
+
+            <input
+              placeholder="Enter New Password"
+              type="password"
+              name="newPassword"
+              onChange={handleChange}
+              value={login.newPassword}
+              className={styles.input}
+              required
+            />
+          </>
+        )}
 
         <button type="submit" className={styles.button}>
-          Send Reset Link
+          {isOTPSent ? "Reset Password" : "Send OTP"}
         </button>
 
         <p className={styles.passwordText}>
@@ -61,8 +106,6 @@ const PasswordReset = () => {
             Login
           </Link>
         </p>
-
-        
       </div>
     </form>
   );

@@ -5,14 +5,22 @@ const UserSchema = new mongoose.Schema({
         type: String
     },
     email: {
-        type: String
+        type: String,
+        required: true,
+        unique: true
     },
     password: {
         type: String
     },
     colourBlind: {
         type: [String]
+    },
+    otp: {
+        type: String 
+    },
+    otpExpiresAt: {
+        type: Date
     }
-}, {timestamps:true});
+}, {timestamps: true});
 
 module.exports = mongoose.model("User", UserSchema);

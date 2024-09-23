@@ -20,7 +20,9 @@ async function SigUp(req, res) {
       name,
       email,
       password,
-      colourBlind
+      colourBlind,
+      otp: "",
+      otpExpiresAt: "",
     });
 
     const d = await data.save();

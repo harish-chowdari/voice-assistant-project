@@ -126,7 +126,10 @@ const Signup = () => {
           Submit
         </button>
         <p className={styles.text}>
-          Already have an account? <Link to="/" className={styles.link}>Login</Link>
+          Already have an account?{" "}
+          <Link to="/" className={styles.link}>
+            Login
+          </Link>
         </p>
       </form>
     </div>
